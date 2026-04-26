@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HostelHub - Find Your Perfect Stay</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        /* Navigation */
+        nav {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: white;
+        }
+
+        .logo span {
+            color: #ffd700;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #ffd700;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, rgba(30, 60, 114, 0.9), rgba(42, 82, 152, 0.9)),
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><rect fill="%231e3c72" width="1200" height="600"/><circle fill="%232a5298" cx="100" cy="100" r="80"/><circle fill="%232a5298" cx="900" cy="400" r="120"/><circle fill="%233d5a99" cx="600" cy="200" r="100"/></svg>');
+            background-size: cover;
+            background-position: center;
+            padding: 100px 20px;
+            text-align: center;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero p {
+            font-size: 1.3em;
+            margin-bottom: 40px;
+            opacity: 0.95;
+        }
+
+        /* Search Box */
+        .search-box {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 900px;
+            margin: 0 auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .search-form {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 15px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+
+        .input-group input,
+        .input-group select {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: #2a5298;
+        }
+
+        .search-btn {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            color: #1e3c72;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            align-self: flex-end;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        /* Section Headers */
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .section-header h2 {
+            font-size: 2.5em;
+            color: #1e3c72;
+            margin-bottom: 10px;
+        }
+
+        .section-header p {
+            font-size: 1.1em;
+            color: #666;
+        }
+
+        /* Popular Locations */
+        .locations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 60px;
+        }
+
+        .location-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .location-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .location-image {
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4em;
+        }
+
+        .location-info {
+            padding: 20px;
+        }
+
+        .location-info h3 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            color: #1e3c72;
+        }
+
+        .location-info p {
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .location-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9em;
+            color: #888;
+        }
+
+        /* Hostel Cards */
+        .hostels-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .hostel-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .hostel-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .hostel-image {
+            height: 220px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5em;
+            position: relative;
+        }
+
+        .availability-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #51cf66;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.2em;
+            font-weight: bold;
+        }
+
+        .hostel-content {
+            padding: 25px;
+        }
+
+        .hostel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .hostel-title h3 {
+            font-size: 1.6em;
+            color: #1e3c72;
+            margin-bottom: 5px;
+        }
+
+        .hostel-location {
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.95em;
+        }
+
+        .hostel-rating {
+            background: #ffd700;
+            color: #1e3c72;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .rating-score {
+            font-size: 1.3em;
+            display: block;
+        }
+
+        .rating-text {
+            font-size: 0.7em;
+        }
+
+        .hostel-features {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #555;
+            font-size: 0.9em;
+        }
+
+        .hostel-price {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 20px;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        .price-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .price {
+            font-size: 2em;
+            font-weight: bold;
+            color: #1e3c72;
+        }
+
+        .price-label {
+            font-size: 0.9em;
+            color: #888;
+        }
+
+        .book-btn {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .book-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(30, 60, 114, 0.3);
+        }
+
+        /* Features Section */
+        .features-section {
+            background: white;
+            padding: 60px 20px;
+            margin: 60px 0;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-box {
+            text-align: center;
+        }
+
+        .feature-icon {
+            font-size: 3.5em;
+            margin-bottom: 15px;
+        }
+
+        .feature-box h3 {
+            font-size: 1.4em;
+            color: #1e3c72;
+            margin-bottom: 10px;
+        }
+
+        .feature-box p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        footer {
+            background: #1e3c72;
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #ffd700;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .search-form {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h1 {
+                font-size: 2em;
+            }
+
+            .nav-links {
+                gap: 15px;
+                font-size: 0.9em;
+            }
+
+            .hostels-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .locations-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Availability Status */
+        .status-available {
+            background: #51cf66;
+        }
+
+        .status-limited {
+            background: #ffd43b;
+        }
+
+        .status-full {
+            background: #ff6b6b;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">Hostel<span>Hub</span></div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#locations">Locations</a></li>
+                <li><a href="#hostels">Hostels</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <h1>Find Your Perfect Hostel Stay</h1>
+        <p>Discover comfortable, affordable hostels at your desired location</p>
+        
+        <div class="search-box">
+            <form class="search-form">
+                <div class="input-group">
+                    <label for="location">📍 Location</label>
+                    <input type="text" id="location" placeholder="Enter city or area" value="New Delhi">
+                </div>
+                <div class="input-group">
+                    <label for="checkin">📅 Check-in</label>
+                    <input type="date" id="checkin">
+                </div>
+                <div class="input-group">
+                    <label for="checkout">📅 Check-out</label>
+                    <input type="date" id="checkout">
+                </div>
+                <div class="input-group">
+                    <label for="guests">👥 Guests</label>
+                    <select id="guests">
+                        <option>1 Person</option>
+                        <option>2 Persons</option>
+                        <option>3 Persons</option>
+                        <option>4+ Persons</option>
+                    </select>
+                </div>
+                <button type="button" class="search-btn">Search Hostels</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Popular Locations -->
+    <div class="container" id="locations">
+        <div class="section-header">
+            <h2>Popular Locations</h2>
+            <p>Explore hostels in trending destinations</p>
+        </div>
+        
+        <div class="locations-grid">
+            <div class="location-card">
+                <div class="location-image">🏛️</div>
+                <div class="location-info">
+                    <h3>New Delhi</h3>
+                    <p>Capital city with rich history and culture</p>
+                    <div class="location-stats">
+                        <span>45 Hostels</span>
+                        <span>From ₹500/night</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="location-card">
+                <div class="location-image">🏖️</div>
+                <div class="location-info">
+                    <h3>Mumbai</h3>
+                    <p>The city of dreams and entertainment</p>
+                    <div class="location-stats">
+                        <span>38 Hostels</span>
+                        <span>From ₹600/night</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="location-card">
+                <div class="location-image">🏔️</div>
+                <div class="location-info">
+                    <h3>Bangalore</h3>
+                    <p>Garden city with pleasant weather</p>
+                    <div class="location-stats">
+                        <span>52 Hostels</span>
+                        <span>From ₹450/night</span>
+                    </div>
+            </div>
+            </div>
+
+            <div class="location-card">
+                <div class="location-image">🕌</div>
+                <div class="location-info">
+                    <h3>Jaipur</h3>
+                    <p>The Pink City of royal heritage</p>
+                    <div class="location-stats">
+                        <span>28 Hostels</span>
+                        <span>From ₹400/night</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Available Hostels -->
+    <div class="container" id="hostels">
+        <div class="section-header">
+            <h2>Available Hostels in New Delhi</h2>
+            <p>Hand-picked hostels with great reviews and amenities</p>
+        </div>
+
+        <div class="hostels-grid">
+            <!-- Hostel 1 -->
+            <div class="hostel-card">
+                <div class="hostel-image">
+                    🏨
+                    <span class="availability-badge status-available">Available</span>
+                </div>
+                <div class="hostel-content">
+                    <div class="hostel-header">
+                        <div class="hostel-title">
+                            <h3>Central Haven Hostel</h3>
+                            <div class="hostel-location">📍 Connaught Place, New Delhi</div>
+                        </div>
+                        <div class="hostel-rating">
+                            <span class="rating-score">4.8</span>
+                            <span class="rating-text">Excellent</span>
+                        </div>
+                    </div>
+                    
+                    <div class="hostel-features">
+                        <span class="feature">🛏️ 12 Beds Available</span>
+                        <span class="feature">📶 Free WiFi</span>
+                        <span class="feature">🍳 Kitchen</span>
+                        <span class="feature">🅿️ Parking</span>
+                    </div>
+
+                    <div class="hostel-price">
+                        <div class="price-info">
+                            <span class="price">₹599</span>
+                            <span class="price-label">per night</span>
+                        </div>
+                        <button class="book-btn">Book Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hostel 2 -->
+            <div class="hostel-card">
+                <div class="hostel-image">
+                    🏠
+                    <span class="availability-badge status-available">Available</span>
+                </div>
+                <div class="hostel-content">
+                    <div class="hostel-header">
+                        <div class="hostel-title">
+                            <h3>Student's Paradise</h3>
+                            <div class="hostel-location">📍 Karol Bagh, New Delhi</div>
+                        </div>
+                        <div class="hostel-rating">
+                            <span class="rating-score">4.6</span>
+                            <span class="rating-text">Very Good</span>
+                        </div>
+                    </div>
+                    
+                    <div class="hostel-features">
+                        <span class="feature">🛏️ 8 Beds Available</span>
+                        <span class="feature">📶 Free WiFi</span>
+                        <span class="feature">🏋️ Gym</span>
+                        <span class="feature">🔒 Lockers</span>
+                    </div>
+
+                    <div class="hostel-price">
+                        <div class="price-info">
+                            <span class="price">₹499</span>
+                            <span class="price-label">per night</span>
+                        </div>
+                        <button class="book-btn">Book Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hostel 3 -->
+            <div class="hostel-card">
+                <div class="hostel-image">
+                    🏢
+                    <span class="availability-badge status-limited">Limited</span>
+                </div>
+                <div class="hostel-content">
+                    <div class="hostel-header">
+                        <div class="hostel-title">
+                            <h3>Metro Stay Hostel</h3>
+                            <div class="hostel-location">📍 Dwarka, New Delhi</div>
+                        </div>
+                        <div class="hostel-rating">
+                            <span class="rating-score">4.7</span>
+                            <span class="rating-text">Excellent</span>
+                        </div>
+                    </div>
+                    
+                    <div class="hostel-features">
+                        <span class="feature">🛏️ 3 Beds Available</span>
+                        <span class="feature">📶 Free WiFi</span>
+                        <span class="feature">☕ Cafe</span>
+                        <span class="feature">🧺 Laundry</span>
+                    </div>
+
+                    <div class="hostel-price">
+                        <div class="price-info">
+                            <span class="price">₹549</span>
+                            <span class="price-label">per night</span>
+                        </div>
+                        <button class="book-btn">Book Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hostel 4 -->
+            <div class="hostel-card">
+                <div class="hostel-image">
+                    🌆
+                    <span class="availability-badge status-available">Available</span>
+                </div>
+                <div class="hostel-content">
+                    <div class="hostel-header">
+                        <div class="hostel-title">
+                            <h3>Backpacker's Hub</h3>
+                            <div class="hostel-location">📍 Paharganj, New Delhi</div>
+                        </div>
+                        <div class="hostel-rating">
+                            <span class="rating-score">4.5</span>
+                            <span class="rating-text">Very Good</span>
+                        </div>
+                    </div>
+                    
+                    <div class="hostel-features">
+                        <span class="feature">🛏️ 15 Beds Available</span>
+                        <span class="feature">📶 Free WiFi</span>
+                        <span class="feature">🎮 Game Room</span>
+                        <span class="feature">🍽️ Restaurant</span>
+                    </div>
+
+                    <div class="hostel-price">
+                        <div class="price-info">
+                            <span class="price">₹399</span>
+                            <span class="price-label">per night</span>
+                        </div>
+                        <button class="book-btn">Book Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hostel 5 -->
+            <div class="hostel-card">
+                <div class="hostel-image">
+                    🏘️
+                    <span class="availability-badge status-available">Available</span>
+                </div>
+                <div class="hostel-content">
+                    <div class="hostel-header">
+                        <div class="hostel-title">
+                            <h3>Green Valley Hostel</h3>
+                            <div class="hostel-location">📍 South Delhi, New Delhi</div>
+                        </div>
+                        <div class="hostel-rating">
+                            <span class="rating-score">4.9</span>
+                            <span class="rating-text">Outstanding</span>
+                        </div>
+                    </div>
+                    
+                    <div class="hostel-features">
+                        <span class="feature">🛏️ 10 Beds Available</span>
+                        <span class="feature">📶 Free WiFi</span>
+                        <span class="feature">🌳 Garden</span>
+                        <span class="feature">❄️ AC Rooms</span>
+                    </div>
+
+                    <div class="hostel-price">
+                        <div class="price-info">
+                            <span class="price">₹699</span>
+                            <span class="price-label">per night</span>
+                        </div>
+                        <button class="book-btn">Book Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hostel 6 -->
+            <div class="hostel-card">
+                <div class="hostel-image">
+                    🏯
+                    <span class="availability-badge status-limited">Limited</span>
+                </div>
+                <div class="hostel-content">
+                    <div class="hostel-header">
+                        <div class="hostel-title"> 
+                            <h3>Heritage Inn Hostel</h3>
+                            <div class="hostel-location">📍 Old Delhi, New Delhi</div>
+                        </div>
+                        <div class="hostel-rating">
+                            <span class="rating-score">4.4</span>
+                            <span class="rating-text">Good</span>
+                        </div>
+                    </div>
+                    
+                    <div class="hostel-features">
+                        <span class="feature">🛏️ 5 Beds Available</span>
+                        <span class="feature">📶 Free WiFi</span>
+                        <span class="feature">🏛️ Heritage</span>
+                        <span class="feature">📚 Library</span>
+                    </div>
+
+                    <div class="hostel-price">
+                        <div class="price-info">
+                            <span class="price">₹449</span>
+                            <span class="price-label">per night</span>
+                        </div>
+                        <button class="book-btn">Book Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <section class="features-section" id="about">
+        <div class="section-header">
+            <h2>Why Choose HostelHub?</h2>
+            <p>We make hostel booking simple and reliable</p>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-box">
+                <div class="feature-icon">🔍</div>
+                <h3>Easy Search</h3>
+                <p>Find hostels by location, price, and amenities with our advanced search filters</p>
+            </div>
+            
+            <div class="feature-box">
+                <div class="feature-icon">✅</div>
+                <h3>Verified Hostels</h3>
+                <p>All hostels are verified with real reviews from genuine travelers</p>
+            </div>
+            
+            <div class="feature-box">
+                <div class="feature-icon">💰</div>
+                <h3>Best Prices</h3>
+                <p>Get the best deals and prices with no hidden charges</p>
+            </div>
+            
+            <div class="feature-box">
+                <div class="feature-icon">🔒</div>
+                <h3>Secure Booking</h3>
+                <p>Safe and secure payment options with instant confirmation</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="footer-content">
+            <div class="logo">Hostel<span>Hub</span></div>
+            <div class="footer-links">
+                <a href="#about">About Us</a>
+                <a href="#contact">Contact</a>
+                <a href="#privacy">Privacy Policy</a>
+                <a href="#terms">Terms & Conditions</a>
+                <a href="#help">Help Center</a>
+            </div>
+            <p style="margin-top: 20px; opacity: 0.8;">© 2024 HostelHub. All rights reserved.</p>
+            <p style="margin-top: 10px; opacity: 0.7;">📧 support@hostelhub.com | 📞 +91 123-456-7890</p>
+        </div>
+    </footer>
+
+    <script>
+        // Set default dates
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        
+        document.getElementById('checkin').valueAsDate = today;
+        document.getElementById('checkout').valueAsDate = tomorrow;
+    </script>
+</body>
+</html>

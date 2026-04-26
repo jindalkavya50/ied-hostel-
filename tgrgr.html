@@ -1,0 +1,1684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HostelHub - Premium Hostel Booking Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --dark: #1f2937;
+            --light: #f9fafb;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f5f5f5;
+        }
+
+        /* Navigation */
+        nav {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+        }
+
+        .logo span { color: #ffd700; }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover { color: #ffd700; }
+
+        .nav-right {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .auth-btn, .wishlist-nav-btn {
+            padding: 8px 20px;
+            background: #ffd700;
+            color: #333;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .wishlist-nav-btn {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+            position: relative;
+        }
+
+        .wishlist-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.7em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: white;
+            border-radius: 3px;
+            transition: 0.3s;
+        }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(135deg, rgba(102,126,234,0.95), rgba(118,75,162,0.95)),
+                        url('https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=1200');
+            background-size: cover;
+            background-position: center;
+            padding: 100px 20px;
+            text-align: center;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero p {
+            font-size: 1.3em;
+            margin-bottom: 40px;
+        }
+
+        /* Search Box */
+        .search-box {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 1000px;
+            margin: 0 auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .search-form {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr auto;
+            gap: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+
+        .input-group select,
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: 0.3s;
+        }
+
+        .input-group select:focus,
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .search-btn {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #333;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            align-self: end;
+            transition: 0.3s;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255,215,0,0.4);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5em;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        /* Filters */
+        .filters-container {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .filters-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .filter-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .filter-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .price-slider {
+            width: 100%;
+        }
+
+        .clear-btn {
+            padding: 10px 20px;
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            background: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .results-count {
+            font-size: 1.2em;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .sort-select {
+            padding: 10px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Hostel Cards */
+        .hostels-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .hostel-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: 0.3s;
+        }
+
+        .hostel-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .hostel-image {
+            height: 220px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .wishlist-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.3em;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .wishlist-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .wishlist-btn.active {
+            color: var(--danger);
+        }
+
+        .badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: var(--success);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+
+        .badge.limited {
+            background: var(--warning);
+        }
+
+        .hostel-content {
+            padding: 20px;
+        }
+
+        .hostel-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .hostel-title h3 {
+            color: #333;
+            font-size: 1.4em;
+            margin-bottom: 5px;
+        }
+
+        .hostel-location {
+            color: #666;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .rating {
+            background: #ffd700;
+            color: #333;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .features {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+
+        .feature {
+            background: #f0f0f0;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.85em;
+            color: #666;
+        }
+
+        .price-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 2px solid #f0f0f0;
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+
+        .price {
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .book-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .book-btn:hover {
+            opacity: 0.9;
+            transform: scale(1.05);
+        }
+
+        .reviews-btn {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            margin: 20px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2em;
+            cursor: pointer;
+            border: none;
+            background: none;
+            color: #666;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255,215,0,0.4);
+        }
+
+        .submit-btn.primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .auth-switch {
+            text-align: center;
+            margin-top: 15px;
+            color: #666;
+        }
+
+        .auth-switch a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* Reviews Section */
+        .reviews-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .review-item {
+            border-bottom: 1px solid #e0e0e0;
+            padding: 15px 0;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .reviewer-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .review-rating {
+            color: #ffd700;
+        }
+
+        .review-text {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .review-date {
+            font-size: 0.85em;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        /* Map Container */
+        .map-container {
+            width: 100%;
+            height: 300px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Admin Panel */
+        .admin-panel {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .admin-table th,
+        .admin-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .admin-table th {
+            background: var(--light);
+            font-weight: 600;
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 10px;
+        }
+
+        .edit-btn, .delete-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .edit-btn {
+            background: var(--warning);
+            color: white;
+        }
+
+        .delete-btn {
+            background: var(--danger);
+            color: white;
+        }
+
+        /* Payment */
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .payment-method {
+            border: 2px solid #e0e0e0;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .payment-method:hover,
+        .payment-method.selected {
+            border-color: var(--primary);
+            background: #f0f0ff;
+        }
+
+        .payment-method img {
+            height: 40px;
+            margin-bottom: 10px;
+        }
+
+        /* No Results */
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 15px;
+            display: none;
+        }
+
+        .no-results.active {
+            display: block;
+        }
+
+        .no-results h3 {
+            font-size: 2em;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .search-form {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h1 {
+                font-size: 2em;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 60px;
+                left: -100%;
+                flex-direction: column;
+                background: white;
+                width: 100%;
+                padding: 20px;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                transition: 0.3s;
+            }
+
+            .nav-links.active {
+                left: 0;
+            }
+
+            .nav-links a {
+                color: #333;
+                padding: 10px 0;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .hostels-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .payment-methods {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                padding: 25px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 1.5em;
+            }
+
+            .price {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo" onclick="location.reload()">Hostel<span>Hub</span></div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#hostels">Hostels</a></li>
+                <li><a href="#" onclick="openModal('adminModal')">Admin</a></li>
+            </ul>
+            <div class="nav-right">
+                <button class="wishlist-nav-btn" onclick="openModal('wishlistModal')">
+                    ❤️ Wishlist
+                    <span class="wishlist-count" id="wishlistCount">0</span>
+                </button>
+                <button class="auth-btn" id="authBtn" onclick="openModal('loginModal')">Login</button>
+                <div id="userDisplay" style="display: none;"></div>
+                <div class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero" id="home">
+        <h1>🏨 Find Your Perfect Hostel</h1>
+        <p>Book verified hostels across India at best prices</p>
+        
+        <div class="search-box">
+            <form class="search-form" id="searchForm">
+                <div class="input-group">
+                    <label>📍 Location</label>
+                    <select id="locationInput">
+                        <option value="">All Cities</option>
+                        <option value="Delhi">Delhi</option>
+                        <option value="Mumbai">Mumbai</option>
+                        <option value="Bangalore">Bangalore</option>
+                        <option value="Goa">Goa</option>
+                        <option value="Jaipur">Jaipur</option>
+                        <option value="Kolkata">Kolkata</option>
+                        <option value="Chennai">Chennai</option>
+                        <option value="Hyderabad">Hyderabad</option>
+                        <option value="Pune">Pune</option>
+                        <option value="Ahmedabad">Ahmedabad</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>📅 Check-in</label>
+                    <input type="date" id="checkin">
+                </div>
+                <div class="input-group">
+                    <label>📅 Check-out</label>
+                    <input type="date" id="checkout">
+                </div>
+                <div class="input-group">
+                    <label>💰 Max Price</label>
+                    <input type="number" id="maxPrice" placeholder="₹1000" value="1000">
+                </div>
+                <button type="button" class="search-btn" onclick="applySearch()">Search</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Hostels Section -->
+    <div class="container" id="hostels">
+        <h2 class="section-title">Available Hostels</h2>
+
+        <!-- Filters -->
+        <div class="filters-container">
+            <div class="filters-header">
+                <h3>🔍 Filters</h3>
+                <button class="clear-btn" onclick="clearFilters()">Clear All</button>
+            </div>
+            <div class="filters-grid">
+                <div class="filter-item">
+                    <input type="checkbox" id="filterWifi" onchange="applyFilters()">
+                    <label for="filterWifi">📶 WiFi</label>
+                </div>
+                <div class="filter-item">
+                    <input type="checkbox" id="filterAC" onchange="applyFilters()">
+                    <label for="filterAC">❄️ AC</label>
+                </div>
+                <div class="filter-item">
+                    <input type="checkbox" id="filterParking" onchange="applyFilters()">
+                    <label for="filterParking">🅿️ Parking</label>
+                </div>
+                <div class="filter-item">
+                    <input type="checkbox" id="filterKitchen" onchange="applyFilters()">
+                    <label for="filterKitchen">🍳 Kitchen</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Bar -->
+        <div class="stats-bar">
+            <div class="results-count" id="resultsCount">Showing 0 hostels</div>
+            <select class="sort-select" id="sortSelect" onchange="sortHostels()">
+                <option value="default">Sort By</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+                <option value="rating">Rating: High to Low</option>
+            </select>
+        </div>
+
+        <!-- No Results -->
+        <div class="no-results" id="noResults">
+            <h3>😔 No hostels found</h3>
+            <p>Try adjusting your filters or search criteria</p>
+        </div>
+
+        <!-- Hostels Grid -->
+        <div class="hostels-grid" id="hostelsGrid"></div>
+    </div>
+
+    <!-- Modals will be added via JavaScript -->
+
+    <script>
+        // Database
+        const hostels = [
+            {id: 1, name: "Central Haven", city: "Delhi", price: 599, rating: 4.8, beds: 12, features: ["wifi", "kitchen", "parking"], image: "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=400"},
+            {id: 2, name: "Student Paradise", city: "Delhi", price: 499, rating: 4.6, beds: 8, features: ["wifi", "gym"], image: "https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=400"},
+            {id: 3, name: "Metro Stay", city: "Delhi", price: 549, rating: 4.7, beds: 3, features: ["wifi", "cafe"], image: "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=400"},
+            {id: 4, name: "Marine Drive Stay", city: "Mumbai", price: 799, rating: 4.8, beds: 10, features: ["wifi", "ac", "parking"], image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400"},
+            {id: 5, name: "Bollywood Hostel", city: "Mumbai", price: 699, rating: 4.7, beds: 12, features: ["wifi", "cafe"], image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400"},
+            {id: 6, name: "Tech Park Hostel", city: "Bangalore", price: 579, rating: 4.7, beds: 12, features: ["wifi", "ac", "gym"], image: "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=400"},
+            {id: 7, name: "Garden City Stay", city: "Bangalore", price: 629, rating: 4.8, beds: 10, features: ["wifi", "kitchen"], image: "https://images.unsplash.com/photo-1596436889106-be35e843f974?w=400"},
+            {id: 8, name: "Beach Paradise", city: "Goa", price: 699, rating: 4.9, beds: 15, features: ["wifi", "beach", "cafe"], image: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400"},
+            {id: 9, name: "Sunset Backpackers", city: "Goa", price: 649, rating: 4.8, beds: 12, features: ["wifi", "beach"], image: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400"},
+            {id: 10, name: "Pink City Hostel", city: "Jaipur", price: 399, rating: 4.6, beds: 10, features: ["wifi", "kitchen"], image: "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=400"},
+            {id: 11, name: "Cultural Heritage", city: "Kolkata", price: 479, rating: 4.6, beds: 10, features: ["wifi", "cafe"], image: "https://images.unsplash.com/photo-1582719508461-905c673771fd?w=400"},
+            {id: 12, name: "Marina Beach", city: "Chennai", price: 529, rating: 4.7, beds: 10, features: ["wifi", "beach", "ac"], image: "https://images.unsplash.com/photo-1595846519845-68e298c2edd8?w=400"},
+            {id: 13, name: "Charminar Hostel", city: "Hyderabad", price: 449, rating: 4.6, beds: 10, features: ["wifi", "restaurant"], image: "https://images.unsplash.com/photo-1584132967334-10e028bd69f7?w=400"},
+            {id: 14, name: "University Hostel", city: "Pune", price: 489, rating: 4.6, beds: 12, features: ["wifi", "kitchen"], image: "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=400"},
+            {id: 15, name: "Sabarmati Hostel", city: "Ahmedabad", price: 419, rating: 4.5, beds: 10, features: ["wifi", "kitchen"], image: "https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=400"}
+        ];
+
+        let filteredHostels = [...hostels];
+        let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+        let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+        let currentBooking = null;
+        let reviews = JSON.parse(localStorage.getItem('reviews')) || {};
+
+        // Initialize
+        window.onload = function() {
+            displayHostels(hostels);
+            updateWishlistCount();
+            checkLoginStatus();
+            setDates();
+            setupHamburger();
+            createModals();
+        };
+
+        // Create all modals
+        function createModals() {
+            const modalsHTML = `
+                <!-- Login Modal -->
+                <div class="modal" id="loginModal">
+                    <div class="modal-content">
+                        <button class="close-btn" onclick="closeModal('loginModal')">&times;</button>
+                        <h2>🔐 Login</h2>
+                        <form id="loginForm" onsubmit="return login(event);">
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" id="loginEmail" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Password</label>
+                                <input type="password" id="loginPassword" minlength="4" required>
+                            </div>
+                            <button type="submit" class="submit-btn">Login</button>
+                            <div class="auth-switch">
+                                Don't have an account? <a href="#" onclick="switchModal('loginModal', 'signupModal')">Sign Up</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Signup Modal -->
+                <div class="modal" id="signupModal">
+                    <div class="modal-content">
+                        <button class="close-btn" onclick="closeModal('signupModal')">&times;</button>
+                        <h2>📝 Sign Up</h2>
+                        <form id="signupForm" onsubmit="return signup(event);">
+                            <div class="form-group">
+                                <label>Name</label>
+                                <input type="text" id="signupName" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" id="signupEmail" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Phone</label>
+                                <input type="tel" id="signupPhone" pattern="[0-9]{10}" maxlength="10" required>
+                                <small style="color: #666;">Must be 10 digits</small>
+                            </div>
+                            <div class="form-group">
+                                <label>Password</label>
+                                <input type="password" id="signupPassword" minlength="4" required>
+                            </div>
+                            <button type="submit" class="submit-btn">Sign Up</button>
+                            <div class="auth-switch">
+                                Already have an account? <a href="#" onclick="switchModal('signupModal', 'loginModal')">Login</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Booking Modal -->
+                <div class="modal" id="bookingModal">
+                    <div class="modal-content">
+                        <button class="close-btn" onclick="closeModal('bookingModal')">&times;</button>
+                        <h2>📋 Book Hostel</h2>
+                        <div id="bookingInfo"></div>
+                        <form id="bookingForm" onsubmit="return confirmBooking(event);">
+                            <div class="form-group">
+                                <label>Name</label>
+                                <input type="text" id="bookName" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Phone (10 digits)</label>
+                                <input type="tel" id="bookPhone" pattern="[0-9]{10}" maxlength="10" oninput="validatePhone(this)" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" id="bookEmail" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Check-in Date</label>
+                                <input type="date" id="bookCheckin" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Check-out Date</label>
+                                <input type="date" id="bookCheckout" required>
+                            </div>
+                            <button type="submit" class="submit-btn primary">Proceed to Payment</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Payment Modal -->
+                <div class="modal" id="paymentModal">
+                    <div class="modal-content">
+                        <button class="close-btn" onclick="closeModal('paymentModal')">&times;</button>
+                        <h2>💳 Payment</h2>
+                        <div id="paymentInfo"></div>
+                        <h3>Select Payment Method</h3>
+                        <div class="payment-methods">
+                            <div class="payment-method" onclick="selectPayment('razorpay')">
+                                <div style="font-size: 2em;">💳</div>
+                                <div>Razorpay</div>
+                            </div>
+                            <div class="payment-method" onclick="selectPayment('stripe')">
+                                <div style="font-size: 2em;">💰</div>
+                                <div>Stripe</div>
+                            </div>
+                            <div class="payment-method" onclick="selectPayment('upi')">
+                                <div style="font-size: 2em;">📱</div>
+                                <div>UPI</div>
+                            </div>
+                        </div>
+                        <button class="submit-btn primary" onclick="processPayment()" style="margin-top: 20px;">Pay Now</button>
+                    </div>
+                </div>
+
+                <!-- Success Modal -->
+                <div class="modal" id="successModal">
+                    <div class="modal-content" style="text-align: center;">
+                        <button class="close-btn" onclick="closeModal('successModal')">&times;</button>
+                        <div style="font-size: 4em; margin: 20px 0;">✅</div>
+                        <h2>Booking Confirmed!</h2>
+                        <p style="margin: 20px 0;">Your booking has been successfully confirmed!</p>
+                        <div id="confirmationDetails"></div>
+                        <button class="submit-btn" onclick="closeModal('successModal')">Done</button>
+                    </div>
+                </div>
+
+                <!-- Reviews Modal -->
+                <div class="modal" id="reviewsModal">
+                    <div class="modal-content">
+                        <button class="close-btn" onclick="closeModal('reviewsModal')">&times;</button>
+                        <h2>⭐ Reviews & Ratings</h2>
+                        <div id="reviewsContent"></div>
+                        <h3 style="margin-top: 30px;">Write a Review</h3>
+                        <form id="reviewForm" onsubmit="return submitReview(event);">
+                            <div class="form-group">
+                                <label>Rating</label>
+                                <select id="reviewRating" required>
+                                    <option value="5">⭐⭐⭐⭐⭐ Excellent</option>
+                                    <option value="4">⭐⭐⭐⭐ Very Good</option>
+                                    <option value="3">⭐⭐⭐ Good</option>
+                                    <option value="2">⭐⭐ Fair</option>
+                                    <option value="1">⭐ Poor</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Your Review</label>
+                                <textarea id="reviewText" rows="4" required></textarea>
+                            </div>
+                            <button type="submit" class="submit-btn">Submit Review</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Wishlist Modal -->
+                <div class="modal" id="wishlistModal">
+                    <div class="modal-content">
+                        <button class="close-btn" onclick="closeModal('wishlistModal')">&times;</button>
+                        <h2>❤️ My Wishlist</h2>
+                        <div id="wishlistContent"></div>
+                    </div>
+                </div>
+
+                <!-- Admin Modal -->
+                <div class="modal" id="adminModal">
+                    <div class="modal-content">
+                        <button class="close-btn" onclick="closeModal('adminModal')">&times;</button>
+                        <h2>🔧 Admin Panel</h2>
+                        <button class="submit-btn" onclick="openModal('addHostelModal')">+ Add New Hostel</button>
+                        <div class="admin-panel">
+                            <table class="admin-table" id="adminTable"></table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add Hostel Modal -->
+                <div class="modal" id="addHostelModal">
+                    <div class="modal-content">
+                        <button class="close-btn" onclick="closeModal('addHostelModal')">&times;</button>
+                        <h2>➕ Add New Hostel</h2>
+                        <form id="addHostelForm" onsubmit="return addHostel(event);">
+                            <div class="form-group">
+                                <label>Name</label>
+                                <input type="text" id="newHostelName" required>
+                            </div>
+                            <div class="form-group">
+                                <label>City</label>
+                                <select id="newHostelCity" required>
+                                    <option value="Delhi">Delhi</option>
+                                    <option value="Mumbai">Mumbai</option>
+                                    <option value="Bangalore">Bangalore</option>
+                                    <option value="Goa">Goa</option>
+                                    <option value="Jaipur">Jaipur</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Price (₹/night)</label>
+                                <input type="number" id="newHostelPrice" min="100" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Beds Available</label>
+                                <input type="number" id="newHostelBeds" min="1" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Image URL</label>
+                                <input type="url" id="newHostelImage" required>
+                            </div>
+                            <button type="submit" class="submit-btn primary">Add Hostel</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Map Modal -->
+                <div class="modal" id="mapModal">
+                    <div class="modal-content">
+                        <button class="close-btn" onclick="closeModal('mapModal')">&times;</button>
+                        <h2>📍 Location</h2>
+                        <div id="mapContent"></div>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modalsHTML);
+        }
+
+        // Display hostels
+        function displayHostels(list) {
+            const grid = document.getElementById('hostelsGrid');
+            const noResults = document.getElementById('noResults');
+            
+            if (list.length === 0) {
+                grid.innerHTML = '';
+                noResults.classList.add('active');
+                document.getElementById('resultsCount').textContent = 'No hostels found';
+                return;
+            }
+
+            noResults.classList.remove('active');
+            document.getElementById('resultsCount').textContent = `Showing ${list.length} hostel${list.length > 1 ? 's' : ''}`;
+
+            grid.innerHTML = list.map(h => `
+                <div class="hostel-card" data-id="${h.id}">
+                    <div class="hostel-image" style="background-image: url('${h.image}')">
+                        <button class="wishlist-btn ${wishlist.includes(h.id) ? 'active' : ''}" onclick="toggleWishlist(${h.id})">
+                            ${wishlist.includes(h.id) ? '❤️' : '🤍'}
+                        </button>
+                        <span class="badge ${h.beds < 5 ? 'limited' : ''}">
+                            ${h.beds < 5 ? 'Limited' : 'Available'}
+                        </span>
+                    </div>
+                    <div class="hostel-content">
+                        <div class="hostel-header">
+                            <div class="hostel-title">
+                                <h3>${h.name}</h3>
+                                <div class="hostel-location">📍 ${h.city}</div>
+                            </div>
+                            <div class="rating">⭐ ${h.rating}</div>
+                        </div>
+                        <div class="features">
+                            <span class="feature">🛏️ ${h.beds} beds</span>
+                            ${h.features.map(f => `<span class="feature">${getFeatureIcon(f)} ${f}</span>`).join('')}
+                        </div>
+                        <div class="price-section">
+                            <div>
+                                <div class="price">₹${h.price}</div>
+                                <small style="color: #888">per night</small>
+                            </div>
+                            <button class="book-btn" onclick="openBooking(${h.id})">Book Now</button>
+                        </div>
+                        <button class="reviews-btn" onclick="openReviews(${h.id})">📝 Read Reviews</button>
+                        <button class="reviews-btn" onclick="showMap('${h.city}', '${h.name}')">📍 View on Map</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Feature icons
+        function getFeatureIcon(feature) {
+            const icons = {
+                'wifi': '📶',
+                'kitchen': '🍳',
+                'parking': '🅿️',
+                'ac': '❄️',
+                'gym': '🏋️',
+                'cafe': '☕',
+                'beach': '🏖️',
+                'restaurant': '🍽️'
+            };
+            return icons[feature] || '✓';
+        }
+
+        // Search and Filter Functions
+        function applySearch() {
+            const location = document.getElementById('locationInput').value;
+            const maxPrice = parseInt(document.getElementById('maxPrice').value) || 10000;
+            
+            filteredHostels = hostels.filter(h => {
+                const matchLocation = !location || h.city === location;
+                const matchPrice = h.price <= maxPrice;
+                return matchLocation && matchPrice;
+            });
+            
+            applyFilters();
+            document.getElementById('hostels').scrollIntoView({behavior: 'smooth'});
+        }
+
+        function applyFilters() {
+            let filtered = [...filteredHostels];
+            
+            if (document.getElementById('filterWifi').checked) {
+                filtered = filtered.filter(h => h.features.includes('wifi'));
+            }
+            if (document.getElementById('filterAC').checked) {
+                filtered = filtered.filter(h => h.features.includes('ac'));
+            }
+            if (document.getElementById('filterParking').checked) {
+                filtered = filtered.filter(h => h.features.includes('parking'));
+            }
+            if (document.getElementById('filterKitchen').checked) {
+                filtered = filtered.filter(h => h.features.includes('kitchen'));
+            }
+            
+            displayHostels(filtered);
+        }
+
+        function clearFilters() {
+            document.getElementById('filterWifi').checked = false;
+            document.getElementById('filterAC').checked = false;
+            document.getElementById('filterParking').checked = false;
+            document.getElementById('filterKitchen').checked = false;
+            document.getElementById('locationInput').value = '';
+            document.getElementById('maxPrice').value = '1000';
+            filteredHostels = [...hostels];
+            displayHostels(hostels);
+        }
+
+        function sortHostels() {
+            const sortBy = document.getElementById('sortSelect').value;
+            const grid = document.getElementById('hostelsGrid');
+            const cards = Array.from(grid.children);
+            
+            cards.sort((a, b) => {
+                const idA = parseInt(a.dataset.id);
+                const idB = parseInt(b.dataset.id);
+                const hostelA = hostels.find(h => h.id === idA);
+                const hostelB = hostels.find(h => h.id === idB);
+                
+                if (sortBy === 'price-low') return hostelA.price - hostelB.price;
+                if (sortBy === 'price-high') return hostelB.price - hostelA.price;
+                if (sortBy === 'rating') return hostelB.rating - hostelA.rating;
+                return 0;
+            });
+            
+            cards.forEach(card => grid.appendChild(card));
+        }
+
+        // Wishlist Functions
+        function toggleWishlist(id) {
+            const index = wishlist.indexOf(id);
+            if (index > -1) {
+                wishlist.splice(index, 1);
+            } else {
+                wishlist.push(id);
+            }
+            localStorage.setItem('wishlist', JSON.stringify(wishlist));
+            updateWishlistCount();
+            displayHostels(filteredHostels);
+        }
+
+        function updateWishlistCount() {
+            document.getElementById('wishlistCount').textContent = wishlist.length;
+        }
+
+        // Booking Functions
+        function openBooking(id) {
+            if (!currentUser) {
+                alert('⚠️ Please login to book!');
+                openModal('loginModal');
+                return;
+            }
+            
+            const hostel = hostels.find(h => h.id === id);
+            currentBooking = hostel;
+            
+            document.getElementById('bookingInfo').innerHTML = `
+                <div style="background: #f5f5f5; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                    <h3>${hostel.name}</h3>
+                    <p>📍 ${hostel.city} | ⭐ ${hostel.rating}</p>
+                    <p style="font-size: 1.5em; font-weight: bold; color: var(--primary);">₹${hostel.price}/night</p>
+                </div>
+            `;
+            
+            document.getElementById('bookName').value = currentUser.name || '';
+            document.getElementById('bookEmail').value = currentUser.email || '';
+            document.getElementById('bookPhone').value = currentUser.phone || '';
+            
+            openModal('bookingModal');
+        }
+
+        function confirmBooking(event) {
+            event.preventDefault();
+            
+            const phone = document.getElementById('bookPhone').value.trim();
+            if (!/^[0-9]{10}$/.test(phone)) {
+                alert('❌ Phone must be exactly 10 digits!');
+                return false;
+            }
+            
+            const checkin = new Date(document.getElementById('bookCheckin').value);
+            const checkout = new Date(document.getElementById('bookCheckout').value);
+            const days = Math.ceil((checkout - checkin) / (1000 * 60 * 60 * 24));
+            
+            if (days < 1) {
+                alert('❌ Check-out must be after check-in!');
+                return false;
+            }
+            
+            const totalPrice = currentBooking.price * days;
+            
+            document.getElementById('paymentInfo').innerHTML = `
+                <div style="background: #f5f5f5; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                    <h3>${currentBooking.name}</h3>
+                    <p>${days} night(s) × ₹${currentBooking.price}</p>
+                    <p style="font-size: 2em; font-weight: bold; color: var(--primary);">Total: ₹${totalPrice}</p>
+                </div>
+            `;
+            
+            closeModal('bookingModal');
+            openModal('paymentModal');
+            
+            return false;
+        }
+
+        function validatePhone(input) {
+            input.value = input.value.replace(/[^0-9]/g, '');
+        }
+
+        let selectedPaymentMethod = null;
+
+        function selectPayment(method) {
+            selectedPaymentMethod = method;
+            document.querySelectorAll('.payment-method').forEach(el => {
+                el.classList.remove('selected');
+            });
+            event.target.closest('.payment-method').classList.add('selected');
+        }
+
+        function processPayment() {
+            if (!selectedPaymentMethod) {
+                alert('⚠️ Please select a payment method!');
+                return;
+            }
+            
+            // Simulate payment processing
+            alert(`💳 Processing payment via ${selectedPaymentMethod.toUpperCase()}...`);
+            
+            setTimeout(() => {
+                const bookingData = {
+                    hostel: currentBooking.name,
+                    city: currentBooking.city,
+                    date: new Date().toLocaleDateString()
+                };
+                
+                document.getElementById('confirmationDetails').innerHTML = `
+                    <div style="background: #f0f9ff; padding: 20px; border-radius: 10px; margin: 20px 0; text-align: left;">
+                        <p><strong>Hostel:</strong> ${bookingData.hostel}</p>
+                        <p><strong>Location:</strong> ${bookingData.city}</p>
+                        <p><strong>Date:</strong> ${bookingData.date}</p>
+                        <p style="margin-top: 15px; color: var(--success);">✅ Payment Successful!</p>
+                    </div>
+                `;
+                
+                closeModal('paymentModal');
+                openModal('successModal');
+                
+                // Save booking
+                const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+                bookings.push(bookingData);
+                localStorage.setItem('bookings', JSON.stringify(bookings));
+            }, 1500);
+        }
+
+        // Reviews Functions
+        function openReviews(id) {
+            const hostel = hostels.find(h => h.id === id);
+            currentBooking = hostel;
+            
+            const hostelReviews = reviews[id] || [];
+            
+            let reviewsHTML = '<div class="reviews-list">';
+            if (hostelReviews.length === 0) {
+                reviewsHTML += '<p style="text-align: center; color: #666;">No reviews yet. Be the first to review!</p>';
+            } else {
+                hostelReviews.forEach(review => {
+                    reviewsHTML += `
+                        <div class="review-item">
+                            <div class="review-header">
+                                <div class="reviewer-name">${review.name}</div>
+                                <div class="review-rating">${'⭐'.repeat(review.rating)}</div>
+                            </div>
+                            <div class="review-text">${review.text}</div>
+                            <div class="review-date">${review.date}</div>
+                        </div>
+                    `;
+                });
+            }
+            reviewsHTML += '</div>';
+            
+            document.getElementById('reviewsContent').innerHTML = reviewsHTML;
+            openModal('reviewsModal');
+        }
+
+        function submitReview(event) {
+            event.preventDefault();
+            
+            if (!currentUser) {
+                alert('⚠️ Please login to write a review!');
+                openModal('loginModal');
+                return false;
+            }
+            
+            const rating = parseInt(document.getElementById('reviewRating').value);
+            const text = document.getElementById('reviewText').value;
+            
+            const review = {
+                name: currentUser.name,
+                rating: rating,
+                text: text,
+                date: new Date().toLocaleDateString()
+            };
+            
+            if (!reviews[currentBooking.id]) {
+                reviews[currentBooking.id] = [];
+            }
+            reviews[currentBooking.id].push(review);
+            localStorage.setItem('reviews', JSON.stringify(reviews));
+            
+            alert('✅ Review submitted successfully!');
+            document.getElementById('reviewForm').reset();
+            closeModal('reviewsModal');
+            
+            return false;
+        }
+
+        // Map Function
+        function showMap(city, name) {
+            const mapHTML = `
+                <h3>${name}</h3>
+                <p>${city}, India</p>
+                <div class="map-container">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d387190.2799109841!2d-74.25987!3d40.697670!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2z${city}!5e0!3m2!1sen!2sin!4v1234567890" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            `;
+            document.getElementById('mapContent').innerHTML = mapHTML;
+            openModal('mapModal');
+        }
+
+        // Admin Functions
+        function openAdminPanel() {
+            let tableHTML = `
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>City</th>
+                    <th>Price</th>
+                    <th>Beds</th>
+                    <th>Actions</th>
+                </tr>
+            `;
+            
+            hostels.forEach(h => {
+                tableHTML += `
+                    <tr>
+                        <td>${h.id}</td>
+                        <td>${h.name}</td>
+                        <td>${h.city}</td>
+                        <td>₹${h.price}</td>
+                        <td>${h.beds}</td>
+                        <td class="action-btns">
+                            <button class="edit-btn" onclick="editHostel(${h.id})">Edit</button>
+                            <button class="delete-btn" onclick="deleteHostel(${h.id})">Delete</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            document.getElementById('adminTable').innerHTML = tableHTML;
+            openModal('adminModal');
+        }
+
+        function addHostel(event) {
+            event.preventDefault();
+            
+            const newHostel = {
+                id: hostels.length + 1,
+                name: document.getElementById('newHostelName').value,
+                city: document.getElementById('newHostelCity').value,
+                price: parseInt(document.getElementById('newHostelPrice').value),
+                beds: parseInt(document.getElementById('newHostelBeds').value),
+                rating: 4.5,
+                features: ['wifi'],
+                image: document.getElementById('newHostelImage').value
+            };
+            
+            hostels.push(newHostel);
+            filteredHostels = [...hostels];
+            displayHostels(hostels);
+            
+            alert('✅ Hostel added successfully!');
+            closeModal('addHostelModal');
+            openAdminPanel();
+            
+            return false;
+        }
+
+        function deleteHostel(id) {
+            if (confirm('Are you sure you want to delete this hostel?')) {
+                const index = hostels.findIndex(h => h.id === id);
+                if (index > -1) {
+                    hostels.splice(index, 1);
+                    filteredHostels = [...hostels];
+                    displayHostels(hostels);
+                    alert('✅ Hostel deleted!');
+                    openAdminPanel();
+                }
+            }
+        }
+
+        // Auth Functions
+        function login(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            currentUser = {
+                name: email.split('@')[0],
+                email: email
+            };
+            
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            updateLoginUI();
+            closeModal('loginModal');
+            alert('✅ Login successful!');
+            
+            return false;
+        }
+
+        function signup(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const phone = document.getElementById('signupPhone').value;
+            
+            if (!/^[0-9]{10}$/.test(phone)) {
+                alert('❌ Phone must be exactly 10 digits!');
+                return false;
+            }
+            
+            currentUser = { name, email, phone };
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            updateLoginUI();
+            closeModal('signupModal');
+            alert('✅ Account created!');
+            
+            return false;
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            currentUser = null;
+            updateLoginUI();
+            alert('👋 Logged out!');
+        }
+
+        function updateLoginUI() {
+            const authBtn = document.getElementById('authBtn');
+            const userDisplay = document.getElementById('userDisplay');
+            
+            if (currentUser) {
+                authBtn.style.display = 'none';
+                userDisplay.style.display = 'flex';
+                userDisplay.style.color = 'white';
+                userDisplay.style.gap = '10px';
+                userDisplay.innerHTML = `
+                    <span>👤 ${currentUser.name}</span>
+                    <button onclick="logout()" style="padding: 8px 15px; background: var(--danger); color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: 600;">Logout</button>
+                `;
+            } else {
+                authBtn.style.display = 'block';
+                userDisplay.style.display = 'none';
+            }
+        }
+
+        function checkLoginStatus() {
+            if (currentUser) {
+                updateLoginUI();
+            }
+        }
+
+        // Modal Functions
+        function openModal(id) {
+            if (id === 'wishlistModal') {
+                showWishlist();
+            }
+            if (id === 'adminModal') {
+                openAdminPanel();
+            }
+            document.getElementById(id).classList.add('active');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        function switchModal(closeId, openId) {
+            closeModal(closeId);
+            openModal(openId);
+        }
+
+        function showWishlist() {
+            const wishlistHostels = hostels.filter(h => wishlist.includes(h.id));
+            
+            if (wishlistHostels.length === 0) {
+                document.getElementById('wishlistContent').innerHTML = '<p style="text-align: center; padding: 40px; color: #666;">Your wishlist is empty</p>';
+                return;
+            }
+            
+            let html = '<div class="hostels-grid">';
+            wishlistHostels.forEach(h => {
+                html += `
+                    <div style="border: 1px solid #e0e0e0; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                        <h3>${h.name}</h3>
+                        <p>📍 ${h.city} | ₹${h.price}/night</p>
+                        <div style="display: flex; gap: 10px; margin-top: 10px;">
+                            <button class="book-btn" onclick="openBooking(${h.id})">Book Now</button>
+                            <button class="delete-btn" onclick="toggleWishlist(${h.id}); showWishlist();">Remove</button>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            
+            document.getElementById('wishlistContent').innerHTML = html;
+        }
+
+        // Helper Functions
+        function setDates() {
+            const today = new Date().toISOString().split('T')[0];
+            const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+            document.getElementById('checkin').value = today;
+            document.getElementById('checkout').value = tomorrow;
+            document.getElementById('bookCheckin').value = today;
+            document.getElementById('bookCheckout').value = tomorrow;
+        }
+
+        function setupHamburger() {
+            const hamburger = document.getElementById('hamburger');
+            const navLinks = document.getElementById('navLinks');
+
+            hamburger.addEventListener('click', function() {
+                navLinks.classList.toggle('active');
+            });
+        }
+    </script>
+</body>
+</html>
